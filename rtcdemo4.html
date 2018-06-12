@@ -1,0 +1,43 @@
+<script src="/socket.io/socket.io.js">
+    var socket = io.connect('http://localhost');
+    function createOffer_success(desc) {
+     pc2_receivedOffer(desc);
+    socket.emit('offer', desc);
+    }
+     function pc2_createAnswer_success(desc) {
+         pc1.setRemoteDescription(desc);
+     socket.emit('answer', desc );
+    }
+    function pc1_onicecandidate(event) {
+        pc2.addIceCandidate(new RTCIceCandidate(event.candidate));
+        socket.emit('ice1', event.candidate);
+    }
+    function pc2_onicecandidate(event) {
+        pc1.addIceCandidate(new RTCIceCandidate(event.candidate));
+        socket.emit('ice2', event.candidate);
+    }
+    function btnHangupClick() {
+        remoteVideo2.src = ""; pc2.close(); pc2 = null;
+        socket.emit('hangup', {});
+    }
+    socket.on('offer', function (data) {
+        console.log("socket.on('offer'):", data);
+        pc2_receivedOffer(data);
+    });
+    socket.on('answer', function (data) {е
+        console.log("socket.on('answer'):", data);
+        pc1.setRemoteDescription( new RTCSessionDescription(data) );
+    });
+    socket.on('ice1', function (data) {
+        console.log("socket.on('ice1'):", data);
+        pc2.addIceCandidate(new RTCIceCandidate(data));
+    });
+    socket.on('ice2', function (data) {
+        console.log("socket.on('ice2'):", data);
+        pc1.addIceCandidate(new RTCIceCandidate(data));
+    });
+    socket.on('hangup', function (data) {
+        console.log("socket.on('hangup'):", data);
+        remoteVideo2.src = ""; pc2.close(); pc2 = null;
+    });
+</script>

@@ -1,0 +1,9 @@
+$ nano nodetest2.html
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect('/'); // URL сервера веб-сокетов (корневая стр
+     socket.on('server event', function (data) {
+         console.log(data);
+         socket.emit('client event', { 'name': 'value' });
+     });
+</script>
