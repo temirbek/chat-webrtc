@@ -21,3 +21,16 @@ io.on('connection', function(socket){
 http.listen(3000, function(){
     console.log('listening on *:3000');
 });
+var app = require('express')()
+    , server = require('http').createServer(app)
+    , io = require('socket.io').listen(server);
+server.listen(3000); // Если порт 80 свободен
+app.get('/', function (req, res) { // При обращении к корневой странице
+    res.sendfile(dirname + '/index.html'); // отдадим HTML-файл
+});
+io.sockets.on('connection', function (socket) {    // При подключении
+    socket.emit('server event', { hello: 'world' }); // отправим сообщение
+    socket.on('client event', function (data) {      // и объявим обработчик события при поступлении сообщения от клиента
+        console.log(data);
+    });
+});

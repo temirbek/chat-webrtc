@@ -1,8 +1,7 @@
-$ nano nodetest2.js
 var app = require('express')()
     , server = require('http').createServer(app)
     , io = require('socket.io').listen(server);
-server.listen(80); // Если порт 80 свободен
+   server.listen(80); // Если порт 80 свободен
 app.get('/', function (req, res) { // При обращении к корневой странице
     res.sendfile(__dirname + '/nodetest2.html'); // отдадим HTML-файл
 });
